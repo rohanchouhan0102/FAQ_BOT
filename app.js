@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3001; // Changed the port number
+const PORT = process.env.PORT || 3001; // Use the port provided by environment variable or default to 3001
 
 // Middleware
 app.use(bodyParser.json());
