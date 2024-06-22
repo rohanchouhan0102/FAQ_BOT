@@ -47,7 +47,7 @@ To run the FAQ Bot locally, follow these steps:
 
  5. **Access the application::**
 
-Open your web browser and go to http://localhost:3001 to view the FAQ Bot.
+Open your web browser and type this [https://faq-bot-m2sp.onrender.com/](https://faq-bot-m2sp.onrender.com/)to view the FAQ Bot.
  
 
 ##Usage
@@ -83,6 +83,4 @@ faq-bot/
 
 Developed by ROHAN CHOUHAN
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
 
