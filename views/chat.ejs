@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+            overflow: auto;
+        }
+        .container {
+            width: 50%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .faq-container {
+            margin-bottom: 20px;
+        }
+        .input-container {
+            position: relative;
+            width: 100%;
+        }
+        .input-container-inner {
+            display: flex;
+            gap: 4px;
+            width: 100%;
+            position: relative;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            box-sizing: border-box;
+            margin-right: -1px; /* Adjust to remove overlap with the button */
+        }
+        .suggestions {
+            position: absolute;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+            width: calc(100% - 2px); /* Adjust width to fit perfectly inside the input container */
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none; /* Initially hide suggestions */
+        }
+        .input-container:hover .suggestions {
+            display: block; /* Show suggestions when input container is hovered */
+        }
+        .suggestions div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestions div:hover {
+            background: #f4f4f4;
+        }
+        .arrow-button {
+            height: 40px;
+            width: 40px;
+            background: #b62dc2;
+            border: 1px solid #b62dc2;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            padding: 0;
+        }
+        .faq-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="faqContainer" class="faq-container"></div>
+        <div class="input-container">
+            <div class="input-container-inner">
+                <input type="text" id="questionInput" placeholder="Start typing your question...">
+                <button class="arrow-button" id="askButton">&rarr;</button>
+            </div>
+            <div class="suggestions" id="suggestions"></div>
+        </div>
+    </div>
+
+    <script>
+        const faqs = <%- JSON.stringify(faqs) %>;
+
+        // Initialize suggestions on page load
+        window.onload = function() {
+            updateSuggestions('');
+        };
+
+        // Function to update suggestions based on input value
+        function updateSuggestions(inputValue) {
+            const suggestions = faqs.filter(faq => faq.question.toLowerCase().includes(inputValue.toLowerCase()));
+            const suggestionsBox = document.getElementById('suggestions');
+            suggestionsBox.innerHTML = '';
+            suggestions.forEach(suggestion => {
+                const div = document.createElement('div');
+                div.textContent = suggestion.question;
+                div.addEventListener('click', function() {
+                    document.getElementById('questionInput').value = suggestion.question;
+                    suggestionsBox.innerHTML = '';
+                });
+                suggestionsBox.appendChild(div);
+            });
+        }
+
+        // Event listener for input changes
+        document.getElementById('questionInput').addEventListener('input', function() {
+            const inputValue = this.value.trim();
+            updateSuggestions(inputValue);
+        });
+
+        // Event listener for ask button click
+        document.getElementById('askButton').addEventListener('click', function() {
+            const question = document.getElementById('questionInput').value.trim();
+            if (question) {
+                fetch('/get-answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question: question })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const faqContainer = document.getElementById('faqContainer');
+                    const faqItem = document.createElement('div');
+                    faqItem.classList.add('faq-item');
+                    faqItem.innerHTML = `<strong>Ques: ${question}</strong><br>Ans: ${data.answer}`;
+                    faqContainer.appendChild(faqItem);
+                    faqItem.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the new FAQ item
+                    document.getElementById('questionInput').value = '';
+                });
+            } else {
+                alert('Please enter a question.');
+            }
+        });
+    </script>
+</body>
+</html>
