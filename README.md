@@ -50,13 +50,13 @@ To run the FAQ Bot locally, follow these steps:
 Open your web browser and type this [https://faq-bot-m2sp.onrender.com/](https://faq-bot-m2sp.onrender.com/)to view the FAQ Bot.
  
 
-##Usage
+## Usage
 * Navigate to the homepage and click on the "Start" button to enter the FAQ chat interface.
 * Type your question in the input box or choose from the list of suggested questions that 
   appear when you click on the input box.
 * Click the arrow button to submit your question and view the answer.
 
-##Folder Structure
+## Folder Structure
 
 ```bash
 faq-bot/
@@ -79,7 +79,7 @@ faq-bot/
 └── README.md             # This README file
 
 ```
-##Credits
+## Credits
 
 Developed by ROHAN CHOUHAN
 
